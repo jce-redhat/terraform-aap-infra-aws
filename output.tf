@@ -14,10 +14,6 @@ output "bastion_private_fqdn" {
   description = "Private FQDN of the AAP bastion"
   value       = aws_instance.bastion.private_dns
 }
-output "bastion_image_id" {
-  description = "AMI used for the bastion instance"
-  value       = var.bastion_image_id != "" ? var.bastion_image_id : data.aws_ami.rhel_9.id
-}
 
 output "controller_public_fqdns" {
   description = "Public FQDN of the AAP controllers"
@@ -30,10 +26,6 @@ output "controller_public_ips" {
 output "controller_private_fqdns" {
   description = "Private FQDN of the AAP controllers"
   value       = aws_instance.controller.*.private_dns
-}
-output "controller_image_id" {
-  description = "AMI used for the controller instances"
-  value       = var.controller_image_id != "" ? var.controller_image_id : data.aws_ami.rhel_9.id
 }
 
 output "hub_public_fqdns" {
@@ -48,7 +40,8 @@ output "hub_private_fqdns" {
   description = "Private FQDN of the AAP hubs"
   value       = aws_instance.hub.*.private_dns
 }
-output "hub_image_id" {
-  description = "AMI used for the hub instances"
-  value       = var.hub_image_id != "" ? var.hub_image_id : data.aws_ami.rhel_9.id
+
+output "database_private_fqdns" {
+  description = "Private FQDN of the AAP hubs"
+  value       = aws_instance.database.*.private_dns
 }
