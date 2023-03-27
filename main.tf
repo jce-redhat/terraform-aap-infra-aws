@@ -8,6 +8,7 @@ terraform {
     }
   }
 
+  # configure during init with `terraform init -backend-config=config.s3.tfbackend`
   backend "s3" {}
 }
 

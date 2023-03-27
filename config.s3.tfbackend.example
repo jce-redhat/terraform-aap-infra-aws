@@ -1,0 +1,3 @@
+bucket = "my-tfstate-bucket"
+key    = "terraform-aap-infra-aws/terraform.tfstate"
+region = "us-east-2"
