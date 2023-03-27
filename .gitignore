@@ -1,0 +1,5 @@
+.terraform/
+.terraform.lock.hcl
+config.s3.tfbackend
+terraform.tfvars
+terraform.tfvars.json
