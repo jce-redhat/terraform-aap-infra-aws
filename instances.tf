@@ -80,7 +80,26 @@ resource "aws_instance" "database" {
 
   tags = {
     Name      = "${var.database_instance_name}${count.index}"
-    node_type = "hub"
+    node_type = "database"
+    build_id  = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "aws_instance" "execution" {
+  count = 0
+
+  instance_type               = var.execution_instance_type
+  ami                         = var.execution_image_id != "" ? var.execution_image_id : data.aws_ami.rhel_9.id
+  key_name                    = var.execution_key_name != "" ? var.execution_key_name : var.bastion_key_name
+  subnet_id                   = aws_subnet.public.id
+  associate_public_ip_address = false
+  vpc_security_group_ids = [
+    aws_security_group.public_subnet.id
+  ]
+
+  tags = {
+    Name      = "${var.execution_instance_name}${count.index}"
+    node_type = "execution_node"
     build_id  = "${random_id.aap_id.hex}"
   }
 }

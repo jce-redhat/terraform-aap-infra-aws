@@ -70,3 +70,20 @@ variable "database_key_name" {
   type    = string
   default = ""
 }
+
+variable "execution_instance_name" {
+  type    = string
+  default = "execution"
+}
+variable "execution_instance_type" {
+  type    = string
+  default = "t3.xlarge"
+}
+variable "execution_image_id" {
+  type    = string
+  default = ""
+}
+variable "execution_key_name" {
+  type    = string
+  default = ""
+}

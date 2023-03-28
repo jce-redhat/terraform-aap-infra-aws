@@ -45,3 +45,8 @@ output "database_private_fqdns" {
   description = "Private FQDN of the AAP hubs"
   value       = aws_instance.database.*.private_dns
 }
+
+output "execution_private_fqdns" {
+  description = "Private FQDN of the AAP hubs"
+  value       = aws_instance.execution.*.private_dns
+}
