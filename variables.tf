@@ -2,6 +2,14 @@ variable "aws_region" {
   type    = string
   default = "us-east-2"
 }
+variable "use_rhel_9" {
+  type    = bool
+  default = false
+}
+variable "aap_architecture" {
+  type    = string
+  default = "simple"
+}
 
 variable "bastion_instance_name" {
   type    = string
