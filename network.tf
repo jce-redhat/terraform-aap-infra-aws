@@ -4,7 +4,7 @@ resource "aws_vpc" "aap_vpc" {
   enable_dns_hostnames = true
   tags = {
     Name     = "AAP VPC"
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -12,7 +12,7 @@ resource "aws_internet_gateway" "aap_gateway" {
   vpc_id = aws_vpc.aap_vpc.id
   tags = {
     Name     = "AAP VPC gateway"
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -22,7 +22,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   tags = {
     Name     = "AAP public subnet"
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -34,7 +34,7 @@ resource "aws_route_table" "aap_rt" {
   }
   tags = {
     Name     = "AAP route table"
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 

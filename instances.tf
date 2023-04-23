@@ -38,8 +38,8 @@ resource "aws_instance" "bastion" {
 
   tags = {
     Name      = var.bastion_instance_name
-    node_type = "bastion"
-    build_id  = "${random_id.aap_id.hex}"
+    aap_node_type = "bastion"
+    aap_build_id  = "${random_id.aap_id.hex}"
   }
 }
 
@@ -61,8 +61,8 @@ resource "aws_instance" "controller" {
 
   tags = {
     Name      = "${var.controller_instance_name}${count.index}"
-    node_type = "controller"
-    build_id  = "${random_id.aap_id.hex}"
+    aap_node_type = "controller"
+    aap_build_id  = "${random_id.aap_id.hex}"
   }
 }
 
@@ -84,8 +84,8 @@ resource "aws_instance" "hub" {
 
   tags = {
     Name      = "${var.hub_instance_name}${count.index}"
-    node_type = "hub"
-    build_id  = "${random_id.aap_id.hex}"
+    aap_node_type = "hub"
+    aap_build_id  = "${random_id.aap_id.hex}"
   }
 }
 
@@ -106,8 +106,8 @@ resource "aws_instance" "database" {
 
   tags = {
     Name      = "${var.database_instance_name}${count.index}"
-    node_type = "database"
-    build_id  = "${random_id.aap_id.hex}"
+    aap_node_type = "database"
+    aap_build_id  = "${random_id.aap_id.hex}"
   }
 }
 
@@ -128,7 +128,7 @@ resource "aws_instance" "execution" {
 
   tags = {
     Name      = "${var.execution_instance_name}${count.index}"
-    node_type = "execution_node"
-    build_id  = "${random_id.aap_id.hex}"
+    aap_node_type = "execution"
+    aap_build_id  = "${random_id.aap_id.hex}"
   }
 }

@@ -17,7 +17,7 @@ resource "aws_security_group" "bastion" {
   }
 
   tags = {
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_security_group" "controller" {
   }
 
   tags = {
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -63,7 +63,7 @@ resource "aws_security_group" "hub" {
   }
 
   tags = {
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
@@ -85,6 +85,6 @@ resource "aws_security_group" "public_subnet" {
   }
 
   tags = {
-    build_id = "${random_id.aap_id.hex}"
+    aap_build_id = "${random_id.aap_id.hex}"
   }
 }

@@ -1,4 +1,4 @@
-output "build_id" {
+output "aap_build_id" {
   value = random_id.aap_id.hex
 }
 
