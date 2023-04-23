@@ -55,6 +55,9 @@ resource "aws_instance" "controller" {
     aws_security_group.controller.id,
     aws_security_group.public_subnet.id
   ]
+  root_block_device {
+    volume_size = var.controller_disk_size
+  }
 
   tags = {
     Name      = "${var.controller_instance_name}${count.index}"
@@ -75,6 +78,9 @@ resource "aws_instance" "hub" {
     aws_security_group.hub.id,
     aws_security_group.public_subnet.id
   ]
+  root_block_device {
+    volume_size = var.hub_disk_size
+  }
 
   tags = {
     Name      = "${var.hub_instance_name}${count.index}"
@@ -94,6 +100,9 @@ resource "aws_instance" "database" {
   vpc_security_group_ids = [
     aws_security_group.public_subnet.id
   ]
+  root_block_device {
+    volume_size = var.database_disk_size
+  }
 
   tags = {
     Name      = "${var.database_instance_name}${count.index}"
@@ -113,6 +122,9 @@ resource "aws_instance" "execution" {
   vpc_security_group_ids = [
     aws_security_group.public_subnet.id
   ]
+  root_block_device {
+    volume_size = var.execution_disk_size
+  }
 
   tags = {
     Name      = "${var.execution_instance_name}${count.index}"

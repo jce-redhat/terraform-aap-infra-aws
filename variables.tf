@@ -44,6 +44,10 @@ variable "controller_key_name" {
   type    = string
   default = ""
 }
+variable "controller_disk_size" {
+  type = number
+  default = 40
+}
 
 variable "hub_instance_name" {
   type    = string
@@ -60,6 +64,10 @@ variable "hub_image_id" {
 variable "hub_key_name" {
   type    = string
   default = ""
+}
+variable "hub_disk_size" {
+  type = number
+  default = 40
 }
 
 variable "database_instance_name" {
@@ -78,6 +86,10 @@ variable "database_key_name" {
   type    = string
   default = ""
 }
+variable "database_disk_size" {
+  type = number
+  default = 40
+}
 
 variable "execution_instance_name" {
   type    = string
@@ -94,4 +106,8 @@ variable "execution_image_id" {
 variable "execution_key_name" {
   type    = string
   default = ""
+}
+variable "execution_disk_size" {
+  type = number
+  default = 40
 }
