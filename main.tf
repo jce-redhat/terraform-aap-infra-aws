@@ -13,7 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = var.aap_aws_region
 }
 
 resource "random_id" "aap_id" {

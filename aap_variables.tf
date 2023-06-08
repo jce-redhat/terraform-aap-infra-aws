@@ -1,4 +1,4 @@
-variable "aws_region" {
+variable "aap_aws_region" {
   type    = string
   default = "us-east-2"
 }
@@ -9,6 +9,15 @@ variable "use_rhel_9" {
 variable "aap_architecture" {
   type    = string
   default = "simple"
+}
+
+variable "aap_vpc_cidr" {
+  type    = string
+  default = "10.255.0.0/24"
+}
+variable "aap_public_subnet_cidr" {
+  type    = string
+  default = "10.255.0.0/26"
 }
 
 variable "bastion_instance_name" {
@@ -45,7 +54,7 @@ variable "controller_key_name" {
   default = ""
 }
 variable "controller_disk_size" {
-  type = number
+  type    = number
   default = 40
 }
 
@@ -66,7 +75,7 @@ variable "hub_key_name" {
   default = ""
 }
 variable "hub_disk_size" {
-  type = number
+  type    = number
   default = 40
 }
 
@@ -87,7 +96,7 @@ variable "database_key_name" {
   default = ""
 }
 variable "database_disk_size" {
-  type = number
+  type    = number
   default = 40
 }
 
@@ -108,6 +117,6 @@ variable "execution_key_name" {
   default = ""
 }
 variable "execution_disk_size" {
-  type = number
+  type    = number
   default = 40
 }
