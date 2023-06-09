@@ -10,6 +10,10 @@ variable "aap_architecture" {
   type    = string
   default = "simple"
 }
+variable "disconnected" {
+  type    = bool
+  default = false
+}
 
 variable "aap_vpc_cidr" {
   type    = string
@@ -18,6 +22,10 @@ variable "aap_vpc_cidr" {
 variable "aap_public_subnet_cidr" {
   type    = string
   default = "10.255.0.0/26"
+}
+variable "aap_private_subnet_cidr" {
+  type    = string
+  default = "10.255.0.64/26"
 }
 
 variable "bastion_instance_name" {

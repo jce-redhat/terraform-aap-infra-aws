@@ -72,16 +72,52 @@ resource "aws_security_group" "public_subnet" {
   description = "Rules for all instances on the AAP public subnet"
   vpc_id      = aws_vpc.aap_vpc.id
   ingress {
-    from_port   = "0"
-    to_port     = "0"
-    protocol    = "-1"
-    cidr_blocks = ["10.255.0.0/26"]
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = flatten([
+      var.aap_public_subnet_cidr,
+      var.disconnected ? [var.aap_private_subnet_cidr] : []
+    ])
   }
   egress {
-    from_port   = "0"
-    to_port     = "0"
-    protocol    = "-1"
-    cidr_blocks = ["10.255.0.0/26"]
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = [
+      var.aap_public_subnet_cidr,
+      var.aap_private_subnet_cidr
+    ]
+  }
+
+  tags = {
+    aap_build_id = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "aws_security_group" "private_subnet" {
+  count = var.disconnected ? 1 : 0
+
+  name        = "aap-private-subnet-${random_id.aap_id.hex}"
+  description = "Rules for all instances on the AAP private subnet"
+  vpc_id      = aws_vpc.aap_vpc.id
+  ingress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = [
+      var.aap_public_subnet_cidr,
+      var.aap_private_subnet_cidr
+    ]
+  }
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = [
+      var.aap_public_subnet_cidr,
+      var.aap_private_subnet_cidr
+    ]
   }
 
   tags = {
