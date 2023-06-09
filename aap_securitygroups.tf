@@ -76,8 +76,8 @@ resource "aws_security_group" "public_subnet" {
     to_port   = "0"
     protocol  = "-1"
     cidr_blocks = flatten([
-      var.aap_public_subnet_cidr,
-      var.disconnected ? [var.aap_private_subnet_cidr] : []
+      local.aap_public_subnet_cidr,
+      var.disconnected ? [local.aap_private_subnet_cidr] : []
     ])
   }
   egress {
@@ -85,8 +85,8 @@ resource "aws_security_group" "public_subnet" {
     to_port   = "0"
     protocol  = "-1"
     cidr_blocks = [
-      var.aap_public_subnet_cidr,
-      var.aap_private_subnet_cidr
+      local.aap_public_subnet_cidr,
+      local.aap_private_subnet_cidr
     ]
   }
 
@@ -106,8 +106,8 @@ resource "aws_security_group" "private_subnet" {
     to_port   = "0"
     protocol  = "-1"
     cidr_blocks = [
-      var.aap_public_subnet_cidr,
-      var.aap_private_subnet_cidr
+      local.aap_public_subnet_cidr,
+      local.aap_private_subnet_cidr
     ]
   }
   egress {
@@ -115,8 +115,8 @@ resource "aws_security_group" "private_subnet" {
     to_port   = "0"
     protocol  = "-1"
     cidr_blocks = [
-      var.aap_public_subnet_cidr,
-      var.aap_private_subnet_cidr
+      local.aap_public_subnet_cidr,
+      local.aap_private_subnet_cidr
     ]
   }
 

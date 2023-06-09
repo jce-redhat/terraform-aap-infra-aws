@@ -1,3 +1,8 @@
+locals {
+  aap_public_subnet_cidr  = cidrsubnet(var.aap_vpc_cidr, 2, 0)
+  aap_private_subnet_cidr = cidrsubnet(var.aap_vpc_cidr, 2, 1)
+}
+
 resource "aws_vpc" "aap_vpc" {
   cidr_block           = var.aap_vpc_cidr
   enable_dns_support   = true
@@ -16,9 +21,25 @@ resource "aws_internet_gateway" "aap_gateway" {
   }
 }
 
+resource "aws_eip" "nat_eip" {
+  # TODO "vpc" is deprecated here, but the documented replacement 'domain = "vpc"'
+  # is failing validation
+  vpc        = true
+  depends_on = [aws_internet_gateway.aap_gateway]
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public.id
+  tags = {
+    Name         = "AAP private subnet NAT gateway"
+    aap_build_id = "${random_id.aap_id.hex}"
+  }
+}
+
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.aap_vpc.id
-  cidr_block              = var.aap_public_subnet_cidr
+  cidr_block              = local.aap_public_subnet_cidr
   map_public_ip_on_launch = true
   tags = {
     Name         = "AAP public subnet"
@@ -47,7 +68,7 @@ resource "aws_subnet" "private" {
   count = var.disconnected ? 1 : 0
 
   vpc_id                  = aws_vpc.aap_vpc.id
-  cidr_block              = var.aap_private_subnet_cidr
+  cidr_block              = local.aap_private_subnet_cidr
   map_public_ip_on_launch = false
   tags = {
     Name         = "AAP private subnet"
@@ -59,6 +80,10 @@ resource "aws_route_table" "aap_private_rt" {
   count = var.disconnected ? 1 : 0
 
   vpc_id = aws_vpc.aap_vpc.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id
+  }
   tags = {
     Name         = "AAP private route table"
     aap_build_id = "${random_id.aap_id.hex}"
