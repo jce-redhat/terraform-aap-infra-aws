@@ -17,6 +17,14 @@ resource "aws_instance" "bastion" {
   }
 }
 
+resource "ansible_host" "bastion" {
+  name   = aws_instance.bastion.public_dns
+  groups = ["bastion"]
+  variables = {
+    ansible_user = "ec2-user"
+  }
+}
+
 resource "aws_instance" "controller" {
   count = 1
 
@@ -38,6 +46,16 @@ resource "aws_instance" "controller" {
     Name          = "${var.controller_instance_name}${count.index}"
     aap_node_type = "controller"
     aap_build_id  = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "ansible_host" "controller" {
+  count = 1
+
+  name   = aws_instance.controller[count.index].public_dns
+  groups = ["controller"]
+  variables = {
+    ansible_user = "ec2-user"
   }
 }
 
@@ -65,6 +83,16 @@ resource "aws_instance" "hub" {
   }
 }
 
+resource "ansible_host" "hub" {
+  count = 1
+
+  name   = aws_instance.hub[count.index].public_dns
+  groups = ["hub"]
+  variables = {
+    ansible_user = "ec2-user"
+  }
+}
+
 resource "aws_instance" "database" {
   count = 0
 
@@ -88,6 +116,16 @@ resource "aws_instance" "database" {
   }
 }
 
+resource "ansible_host" "database" {
+  count = 0
+
+  name   = aws_instance.database[count.index].private_dns
+  groups = ["database"]
+  variables = {
+    ansible_user = "ec2-user"
+  }
+}
+
 resource "aws_instance" "execution" {
   count = 0
 
@@ -108,5 +146,15 @@ resource "aws_instance" "execution" {
     Name          = "${var.execution_instance_name}${count.index}"
     aap_node_type = "execution"
     aap_build_id  = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "ansible_host" "execution" {
+  count = 0
+
+  name   = aws_instance.execution[count.index].private_dns
+  groups = ["execution"]
+  variables = {
+    ansible_user = "ec2-user"
   }
 }
