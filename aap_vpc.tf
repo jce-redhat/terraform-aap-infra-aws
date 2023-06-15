@@ -28,6 +28,10 @@ resource "aws_eip" "nat_eip" {
   # is failing validation
   vpc        = true
   depends_on = [aws_internet_gateway.aap_gateway]
+  tags = {
+    Name         = "AAP Elastic IP for NAT"
+    aap_build_id = "${random_id.aap_id.hex}"
+  }
 }
 
 resource "aws_nat_gateway" "nat" {
