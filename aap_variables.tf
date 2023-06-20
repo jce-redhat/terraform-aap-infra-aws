@@ -16,13 +16,18 @@ variable "aap_vpc_cidr" {
   default = "10.255.0.0/24"
 }
 
+variable "aap_dns_zone" {
+  type    = string
+  default = ""
+}
+
 variable "bastion_instance_name" {
   type    = string
   default = "bastion"
 }
 variable "bastion_instance_type" {
   type    = string
-  default = "t3.micro"
+  default = "t3a.micro"
 }
 variable "bastion_image_id" {
   type    = string
@@ -39,7 +44,7 @@ variable "controller_instance_name" {
 }
 variable "controller_instance_type" {
   type    = string
-  default = "t3.xlarge"
+  default = "t3a.xlarge"
 }
 variable "controller_count" {
   type    = number
@@ -68,7 +73,7 @@ variable "hub_count" {
 }
 variable "hub_instance_type" {
   type    = string
-  default = "t3.xlarge"
+  default = "t3a.xlarge"
 }
 variable "hub_image_id" {
   type    = string
@@ -85,11 +90,11 @@ variable "hub_disk_size" {
 
 variable "database_instance_name" {
   type    = string
-  default = "hub"
+  default = "database"
 }
 variable "database_instance_type" {
   type    = string
-  default = "t3.xlarge"
+  default = "t3a.xlarge"
 }
 variable "database_count" {
   type    = number
@@ -114,7 +119,7 @@ variable "execution_instance_name" {
 }
 variable "execution_instance_type" {
   type    = string
-  default = "t3.xlarge"
+  default = "t3a.xlarge"
 }
 variable "execution_count" {
   type    = number
@@ -131,9 +136,4 @@ variable "execution_key_name" {
 variable "execution_disk_size" {
   type    = number
   default = 40
-}
-
-variable "aap_dns_zone" {
-  type    = string
-  default = ""
 }
