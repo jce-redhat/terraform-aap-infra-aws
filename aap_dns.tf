@@ -9,7 +9,7 @@ resource "aws_route53_record" "controller" {
   name    = "controller${count.index}.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_instance.controller[count.index].public_ip]
+  records = [aws_eip.controller[count.index].public_ip]
 }
 
 resource "aws_route53_record" "hub" {
@@ -19,5 +19,5 @@ resource "aws_route53_record" "hub" {
   name    = "hub${count.index}.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_instance.hub[count.index].public_ip]
+  records = [aws_eip.hub[count.index].public_ip]
 }

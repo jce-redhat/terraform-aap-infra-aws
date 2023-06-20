@@ -49,10 +49,17 @@ resource "aws_instance" "controller" {
   }
 }
 
+resource "aws_eip" "controller" {
+  count = var.controller_count
+
+  instance = aws_instance.controller[count.index].id
+  domain   = "vpc"
+}
+
 resource "ansible_host" "controller" {
   count = var.controller_count
 
-  name   = aws_instance.controller[count.index].public_dns
+  name   = aws_route53_record.controller[count.index].name
   groups = ["controller"]
   variables = {
     ansible_user = "ec2-user"
@@ -83,10 +90,17 @@ resource "aws_instance" "hub" {
   }
 }
 
+resource "aws_eip" "hub" {
+  count = var.hub_count
+
+  instance = aws_instance.hub[count.index].id
+  domain   = "vpc"
+}
+
 resource "ansible_host" "hub" {
   count = var.hub_count
 
-  name   = aws_instance.hub[count.index].public_dns
+  name   = aws_route53_record.hub[count.index].name
   groups = ["hub"]
   variables = {
     ansible_user = "ec2-user"
