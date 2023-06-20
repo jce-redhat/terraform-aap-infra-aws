@@ -7,7 +7,7 @@ repo can be used as a stand-alone tool, but is designed to be used with the Ansi
 
 ## Using the repo manually
 
-1. Create a config.s3.tfbackend file from the example provided.  Modify the bucket, key, and region as appropriate.
+1. Create a config.s3.tfbackend file from the example provided.  Modify the bucket, key, and region as appropriate.  The bucket used to store the terraform state must already exist.
 ```
 cp config.s3.tfbackend.example config.s3.tfbackend
 vim config.s3.tfbackend

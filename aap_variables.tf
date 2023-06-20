@@ -132,3 +132,8 @@ variable "execution_disk_size" {
   type    = number
   default = 40
 }
+
+variable "aap_dns_zone" {
+  type    = string
+  default = ""
+}
