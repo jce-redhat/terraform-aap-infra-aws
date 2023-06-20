@@ -24,9 +24,7 @@ resource "aws_internet_gateway" "aap_gateway" {
 resource "aws_eip" "nat_eip" {
   count = var.disconnected ? 1 : 0
 
-  # TODO "vpc" is deprecated here, but the documented replacement 'domain = "vpc"'
-  # is failing validation
-  vpc        = true
+  domain     = "vpc"
   depends_on = [aws_internet_gateway.aap_gateway]
   tags = {
     Name         = "AAP Elastic IP for NAT"
