@@ -26,7 +26,7 @@ resource "ansible_host" "bastion" {
 }
 
 resource "aws_instance" "controller" {
-  count = 1
+  count = var.controller_count
 
   instance_type               = var.controller_instance_type
   ami                         = var.controller_image_id != "" ? var.controller_image_id : local.rhel_ami.id
@@ -50,7 +50,7 @@ resource "aws_instance" "controller" {
 }
 
 resource "ansible_host" "controller" {
-  count = 1
+  count = var.controller_count
 
   name   = aws_instance.controller[count.index].public_dns
   groups = ["controller"]
@@ -60,7 +60,7 @@ resource "ansible_host" "controller" {
 }
 
 resource "aws_instance" "hub" {
-  count = 1
+  count = var.hub_count
 
   instance_type               = var.hub_instance_type
   ami                         = var.hub_image_id != "" ? var.hub_image_id : local.rhel_ami.id
@@ -84,7 +84,7 @@ resource "aws_instance" "hub" {
 }
 
 resource "ansible_host" "hub" {
-  count = 1
+  count = var.hub_count
 
   name   = aws_instance.hub[count.index].public_dns
   groups = ["hub"]
@@ -94,7 +94,7 @@ resource "ansible_host" "hub" {
 }
 
 resource "aws_instance" "database" {
-  count = 0
+  count = var.database_count
 
   instance_type               = var.database_instance_type
   ami                         = var.database_image_id != "" ? var.database_image_id : local.rhel_ami.id
@@ -117,7 +117,7 @@ resource "aws_instance" "database" {
 }
 
 resource "ansible_host" "database" {
-  count = 0
+  count = var.database_count
 
   name   = aws_instance.database[count.index].private_dns
   groups = ["database"]
@@ -127,7 +127,7 @@ resource "ansible_host" "database" {
 }
 
 resource "aws_instance" "execution" {
-  count = 0
+  count = var.execution_count
 
   instance_type               = var.execution_instance_type
   ami                         = var.execution_image_id != "" ? var.execution_image_id : local.rhel_ami.id
@@ -150,7 +150,7 @@ resource "aws_instance" "execution" {
 }
 
 resource "ansible_host" "execution" {
-  count = 0
+  count = var.execution_count
 
   name   = aws_instance.execution[count.index].private_dns
   groups = ["execution"]

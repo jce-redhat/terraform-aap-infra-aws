@@ -6,10 +6,6 @@ variable "use_rhel_9" {
   type    = bool
   default = false
 }
-variable "aap_architecture" {
-  type    = string
-  default = "simple"
-}
 variable "disconnected" {
   type    = bool
   default = false
@@ -45,6 +41,10 @@ variable "controller_instance_type" {
   type    = string
   default = "t3.xlarge"
 }
+variable "controller_count" {
+  type    = number
+  default = "1"
+}
 variable "controller_image_id" {
   type    = string
   default = ""
@@ -61,6 +61,10 @@ variable "controller_disk_size" {
 variable "hub_instance_name" {
   type    = string
   default = "hub"
+}
+variable "hub_count" {
+  type    = number
+  default = "1"
 }
 variable "hub_instance_type" {
   type    = string
@@ -87,6 +91,10 @@ variable "database_instance_type" {
   type    = string
   default = "t3.xlarge"
 }
+variable "database_count" {
+  type    = number
+  default = "0"
+}
 variable "database_image_id" {
   type    = string
   default = ""
@@ -107,6 +115,10 @@ variable "execution_instance_name" {
 variable "execution_instance_type" {
   type    = string
   default = "t3.xlarge"
+}
+variable "execution_count" {
+  type    = number
+  default = "0"
 }
 variable "execution_image_id" {
   type    = string
