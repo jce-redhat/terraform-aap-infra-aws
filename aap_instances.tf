@@ -63,6 +63,7 @@ resource "ansible_host" "controller" {
   groups = ["controller"]
   variables = {
     ansible_user = "ec2-user"
+    ansible_host = aws_instance.controller[count.index].private_dns
   }
 }
 
@@ -104,6 +105,7 @@ resource "ansible_host" "hub" {
   groups = ["hub"]
   variables = {
     ansible_user = "ec2-user"
+    ansible_host = aws_instance.hub[count.index].private_dns
   }
 }
 
@@ -166,7 +168,7 @@ resource "aws_instance" "execution" {
 resource "ansible_host" "execution" {
   count = var.execution_count
 
-  name   = aws_instance.execution[count.index].private_dns
+  name   = aws_instance.execution[count.index].public_dns
   groups = ["execution"]
   variables = {
     ansible_user = "ec2-user"
