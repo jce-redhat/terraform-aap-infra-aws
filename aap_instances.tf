@@ -63,7 +63,6 @@ resource "ansible_host" "controller" {
   groups = ["controller"]
   variables = {
     ansible_user = "ec2-user"
-    ansible_host = aws_instance.controller[count.index].private_dns
   }
 }
 
@@ -105,7 +104,6 @@ resource "ansible_host" "hub" {
   groups = ["hub"]
   variables = {
     ansible_user = "ec2-user"
-    ansible_host = aws_instance.hub[count.index].private_dns
   }
 }
 
