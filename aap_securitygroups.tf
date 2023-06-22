@@ -32,6 +32,16 @@ resource "aws_security_group" "controller" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "SSH from bastion"
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = [
+      "${aws_instance.bastion.private_ip}/32",
+      "${aws_instance.bastion.public_ip}/32",
+    ]
+  }
   egress {
     from_port   = "0"
     to_port     = "0"
@@ -54,6 +64,16 @@ resource "aws_security_group" "hub" {
     to_port     = "443"
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "SSH from bastion"
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = [
+      "${aws_instance.bastion.private_ip}/32",
+      "${aws_instance.bastion.public_ip}/32",
+    ]
   }
   egress {
     from_port   = "0"
