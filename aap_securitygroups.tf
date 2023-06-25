@@ -127,7 +127,7 @@ resource "aws_security_group" "private_subnet" {
     protocol  = "-1"
     cidr_blocks = [
       local.aap_public_subnet_cidr,
-      local.aap_private_subnet_cidr
+      local.aap_private_subnet_cidr,
     ]
   }
   egress {
@@ -136,7 +136,8 @@ resource "aws_security_group" "private_subnet" {
     protocol  = "-1"
     cidr_blocks = [
       local.aap_public_subnet_cidr,
-      local.aap_private_subnet_cidr
+      local.aap_private_subnet_cidr,
+      local.rhui_cidr[var.aap_aws_region]
     ]
   }
 
