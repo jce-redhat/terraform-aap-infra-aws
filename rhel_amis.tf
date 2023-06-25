@@ -1,9 +1,12 @@
-data "aws_ami" "rhel_8" {
+data "aws_ami" "rhel8" {
   most_recent = true
-  owners      = ["309956199498"]
+  owners = [
+    "309956199498",
+    "self"
+  ]
   filter {
     name   = "name"
-    values = ["RHEL-8.7*Hourly*"]
+    values = [var.rhel8_ami_name]
   }
   filter {
     name   = "architecture"
@@ -11,12 +14,15 @@ data "aws_ami" "rhel_8" {
   }
 }
 
-data "aws_ami" "rhel_9" {
+data "aws_ami" "rhel9" {
   most_recent = true
-  owners      = ["309956199498"]
+  owners = [
+    "309956199498",
+    "self"
+  ]
   filter {
     name   = "name"
-    values = ["RHEL-9.1*Hourly*"]
+    values = [var.rhel9_ami_name]
   }
   filter {
     name   = "architecture"

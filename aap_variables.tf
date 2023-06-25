@@ -2,9 +2,17 @@ variable "aap_aws_region" {
   type    = string
   default = "us-east-2"
 }
-variable "use_rhel_9" {
+variable "use_rhel9" {
   type    = bool
   default = false
+}
+variable "rhel9_ami_name" {
+  type    = string
+  default = "RHEL-9.1*Hourly*"
+}
+variable "rhel8_ami_name" {
+  type    = string
+  default = "RHEL-8.7*Hourly*"
 }
 variable "disconnected" {
   type    = bool

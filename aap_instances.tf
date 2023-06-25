@@ -1,5 +1,5 @@
 locals {
-  rhel_ami = var.use_rhel_9 ? data.aws_ami.rhel_9 : data.aws_ami.rhel_8
+  rhel_ami = var.use_rhel9 ? data.aws_ami.rhel9 : data.aws_ami.rhel8
 }
 
 resource "aws_instance" "bastion" {
