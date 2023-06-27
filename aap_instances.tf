@@ -207,7 +207,7 @@ resource "aws_eip" "edacontroller" {
 resource "ansible_host" "edacontroller" {
   count = var.edacontroller_count
 
-  name   = aws_route53_record.edacontroller[count.index].public_dns
+  name   = aws_route53_record.edacontroller[count.index].name
   groups = ["edacontroller"]
   variables = {
     ansible_user = "ec2-user"
