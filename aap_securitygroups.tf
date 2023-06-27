@@ -174,3 +174,31 @@ resource "aws_security_group" "edacontroller" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group_rule" "db_ingress_controller" {
+  count = var.controller_count
+
+  description       = "Database ingress from AAP controller EIPs"
+  type              = "ingress"
+  security_group_id = aws_security_group.controller.id
+  from_port         = "5432"
+  to_port           = "5432"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "${aws_eip.controller[count.index].public_ip}/32"
+  ]
+}
+
+resource "aws_security_group_rule" "db_ingress_hub" {
+  count = var.hub_count
+
+  description       = "Database ingress from AAP hub EIPs"
+  type              = "ingress"
+  security_group_id = aws_security_group.controller.id
+  from_port         = "5432"
+  to_port           = "5432"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "${aws_eip.hub[count.index].public_ip}/32"
+  ]
+}
