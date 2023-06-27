@@ -172,3 +172,44 @@ resource "ansible_host" "execution" {
     ansible_user = "ec2-user"
   }
 }
+
+resource "aws_instance" "edacontroller" {
+  count = var.edacontroller_count
+
+  instance_type               = var.edacontroller_instance_type
+  ami                         = var.edacontroller_image_id != "" ? var.edacontroller_image_id : local.rhel_ami.id
+  key_name                    = var.edacontroller_key_name != "" ? var.edacontroller_key_name : var.bastion_key_name
+  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  associate_public_ip_address = var.disconnected ? false : true
+  vpc_security_group_ids = flatten([
+    aws_security_group.edacontroller.id,
+    aws_security_group.public_subnet.id,
+    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
+  ])
+  root_block_device {
+    volume_size = var.edacontroller_disk_size
+  }
+
+  tags = {
+    Name          = "${var.edacontroller_instance_name}${count.index}"
+    aap_node_type = "edacontroller"
+    aap_build_id  = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "aws_eip" "edacontroller" {
+  count = var.edacontroller_count
+
+  instance = aws_instance.edacontroller[count.index].id
+  domain   = "vpc"
+}
+
+resource "ansible_host" "edacontroller" {
+  count = var.edacontroller_count
+
+  name   = aws_route53_record.edacontroller[count.index].public_dns
+  groups = ["edacontroller"]
+  variables = {
+    ansible_user = "ec2-user"
+  }
+}

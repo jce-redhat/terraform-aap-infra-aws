@@ -145,3 +145,28 @@ variable "execution_disk_size" {
   type    = number
   default = 40
 }
+
+variable "edacontroller_instance_name" {
+  type    = string
+  default = "edacontroller"
+}
+variable "edacontroller_instance_type" {
+  type    = string
+  default = "t3a.xlarge"
+}
+variable "edacontroller_count" {
+  type    = number
+  default = "0"
+}
+variable "edacontroller_image_id" {
+  type    = string
+  default = ""
+}
+variable "edacontroller_key_name" {
+  type    = string
+  default = ""
+}
+variable "edacontroller_disk_size" {
+  type    = number
+  default = 40
+}

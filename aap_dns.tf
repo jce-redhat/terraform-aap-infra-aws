@@ -21,3 +21,13 @@ resource "aws_route53_record" "hub" {
   ttl     = "300"
   records = [aws_eip.hub[count.index].public_ip]
 }
+
+resource "aws_route53_record" "edacontroller" {
+  count = var.edacontroller_count
+
+  zone_id = data.aws_route53_zone.sandbox.zone_id
+  name    = "edacontroller${count.index}.${var.aap_dns_zone}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.edacontroller[count.index].public_ip]
+}

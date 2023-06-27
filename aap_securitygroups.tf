@@ -145,3 +145,32 @@ resource "aws_security_group" "private_subnet" {
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }
+
+resource "aws_security_group" "edacontroller" {
+  name        = "aap-edacontroller-${random_id.aap_id.hex}"
+  description = "AAP EDA controller ingress rules"
+  vpc_id      = aws_vpc.aap_vpc.id
+  ingress {
+    description = "HTTPS"
+    from_port   = "443"
+    to_port     = "443"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    description = "SSH from bastion"
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = [
+      "${aws_instance.bastion.private_ip}/32",
+      "${aws_instance.bastion.public_ip}/32",
+    ]
+  }
+  egress {
+    from_port   = "0"
+    to_port     = "0"
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

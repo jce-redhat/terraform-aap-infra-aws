@@ -26,3 +26,8 @@ output "execution_public_fqdns" {
   description = "Public FQDN of the AAP execution nodes"
   value       = aws_instance.execution.*.public_dns
 }
+
+output "edacontroller_public_fqdns" {
+  description = "Public FQDN of the AAP EDA controllers"
+  value       = aws_route53_record.edacontroller.*.name
+}
