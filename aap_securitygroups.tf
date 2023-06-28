@@ -202,3 +202,17 @@ resource "aws_security_group_rule" "db_ingress_hub" {
     "${aws_eip.hub[count.index].public_ip}/32"
   ]
 }
+
+resource "aws_security_group_rule" "db_ingress_edacontroller" {
+  count = var.edacontroller_count
+
+  description       = "Database ingress from AAP EDA controller EIPs"
+  type              = "ingress"
+  security_group_id = aws_security_group.edacontroller.id
+  from_port         = "5432"
+  to_port           = "5432"
+  protocol          = "tcp"
+  cidr_blocks = [
+    "${aws_eip.edacontroller[count.index].public_ip}/32"
+  ]
+}
