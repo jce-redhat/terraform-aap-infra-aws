@@ -104,10 +104,10 @@ resource "aws_security_group" "public_subnet" {
     from_port = "0"
     to_port   = "0"
     protocol  = "-1"
-    cidr_blocks = [
+    cidr_blocks = flatten([
       local.aap_public_subnet_cidr,
-      local.aap_private_subnet_cidr
-    ]
+      var.disconnected ? [local.aap_private_subnet_cidr] : []
+    ])
   }
 
   tags = {
@@ -173,46 +173,4 @@ resource "aws_security_group" "edacontroller" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_security_group_rule" "db_ingress_controller" {
-  count = var.controller_count
-
-  description       = "Database ingress from AAP controller EIPs"
-  type              = "ingress"
-  security_group_id = aws_security_group.controller.id
-  from_port         = "5432"
-  to_port           = "5432"
-  protocol          = "tcp"
-  cidr_blocks = [
-    "${aws_eip.controller[count.index].public_ip}/32"
-  ]
-}
-
-resource "aws_security_group_rule" "db_ingress_hub" {
-  count = var.hub_count
-
-  description       = "Database ingress from AAP hub EIPs"
-  type              = "ingress"
-  security_group_id = aws_security_group.controller.id
-  from_port         = "5432"
-  to_port           = "5432"
-  protocol          = "tcp"
-  cidr_blocks = [
-    "${aws_eip.hub[count.index].public_ip}/32"
-  ]
-}
-
-resource "aws_security_group_rule" "db_ingress_edacontroller" {
-  count = var.edacontroller_count
-
-  description       = "Database ingress from AAP EDA controller EIPs"
-  type              = "ingress"
-  security_group_id = aws_security_group.edacontroller.id
-  from_port         = "5432"
-  to_port           = "5432"
-  protocol          = "tcp"
-  cidr_blocks = [
-    "${aws_eip.edacontroller[count.index].public_ip}/32"
-  ]
 }

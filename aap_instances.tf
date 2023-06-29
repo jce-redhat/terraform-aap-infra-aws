@@ -59,10 +59,11 @@ resource "aws_eip" "controller" {
 resource "ansible_host" "controller" {
   count = var.controller_count
 
-  name   = aws_route53_record.controller[count.index].name
+  name   = aws_instance.controller[count.index].private_dns
   groups = ["controller"]
   variables = {
     ansible_user = "ec2-user"
+    aws_eip_fqdn = aws_route53_record.controller[count.index].name
   }
 }
 
@@ -100,10 +101,11 @@ resource "aws_eip" "hub" {
 resource "ansible_host" "hub" {
   count = var.hub_count
 
-  name   = aws_route53_record.hub[count.index].name
+  name   = aws_instance.hub[count.index].private_dns
   groups = ["hub"]
   variables = {
     ansible_user = "ec2-user"
+    aws_eip_fqdn = aws_route53_record.hub[count.index].name
   }
 }
 
@@ -166,7 +168,7 @@ resource "aws_instance" "execution" {
 resource "ansible_host" "execution" {
   count = var.execution_count
 
-  name   = aws_instance.execution[count.index].public_dns
+  name   = aws_instance.execution[count.index].private_dns
   groups = ["execution"]
   variables = {
     ansible_user = "ec2-user"
@@ -207,9 +209,10 @@ resource "aws_eip" "edacontroller" {
 resource "ansible_host" "edacontroller" {
   count = var.edacontroller_count
 
-  name   = aws_route53_record.edacontroller[count.index].name
+  name   = aws_instance.edacontroller[count.index].private_dns
   groups = ["edacontroller"]
   variables = {
     ansible_user = "ec2-user"
+    aws_eip_fqdn = aws_route53_record.edacontroller[count.index].name
   }
 }

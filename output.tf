@@ -11,10 +11,18 @@ output "controller_public_fqdns" {
   description = "Public FQDN of the AAP controllers"
   value       = aws_route53_record.controller.*.name
 }
+output "controller_private_fqdns" {
+  description = "Private FQDN of the AAP controllers"
+  value       = aws_instance.controller.*.private_dns
+}
 
 output "hub_public_fqdns" {
   description = "Public FQDN of the AAP hubs"
   value       = aws_route53_record.hub.*.name
+}
+output "hub_private_fqdns" {
+  description = "Private FQDN of the AAP hubs"
+  value       = aws_instance.hub.*.private_dns
 }
 
 output "database_private_fqdns" {
@@ -30,4 +38,8 @@ output "execution_public_fqdns" {
 output "edacontroller_public_fqdns" {
   description = "Public FQDN of the AAP EDA controllers"
   value       = aws_route53_record.edacontroller.*.name
+}
+output "edacontroller_private_fqdns" {
+  description = "Private FQDN of the AAP EDA controllers"
+  value       = aws_instance.edacontroller.*.private_dns
 }
