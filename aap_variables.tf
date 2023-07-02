@@ -14,6 +14,14 @@ variable "rhel8_ami_name" {
   type    = string
   default = "RHEL-8.7*Hourly*"
 }
+variable "rhel_arch" {
+  type    = string
+  default = "x86_64"
+  validation {
+    condition     = contains(["x86_64", "arm64"], var.rhel_arch)
+    error_message = "Valid values are 'x86_64' or 'arm64'"
+  }
+}
 variable "disconnected" {
   type    = bool
   default = false

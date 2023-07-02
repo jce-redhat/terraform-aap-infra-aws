@@ -10,7 +10,7 @@ data "aws_ami" "rhel8" {
   }
   filter {
     name   = "architecture"
-    values = ["x86_64"]
+    values = [var.rhel_arch]
   }
 }
 
@@ -26,6 +26,6 @@ data "aws_ami" "rhel9" {
   }
   filter {
     name   = "architecture"
-    values = ["x86_64"]
+    values = [var.rhel_arch]
   }
 }
