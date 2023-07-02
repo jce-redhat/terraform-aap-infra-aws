@@ -158,6 +158,13 @@ resource "aws_security_group" "edacontroller" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
+    description = "Webhook ports"
+    from_port   = "5001"
+    to_port     = "5004"
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
     description = "SSH from bastion"
     from_port   = "22"
     to_port     = "22"
