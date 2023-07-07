@@ -1,6 +1,13 @@
+data "aws_availability_zones" "this" {
+}
+
 locals {
-  aap_public_subnet_cidr  = cidrsubnet(var.aap_vpc_cidr, 2, 0)
-  aap_private_subnet_cidr = cidrsubnet(var.aap_vpc_cidr, 2, 1)
+  bastion_subnet_cidr = cidrsubnet(var.aap_vpc_cidr, 2, 0)
+  controller_subnet_cidrs = [
+    cidrsubnet(var.aap_vpc_cidr, 2, 1),
+    cidrsubnet(var.aap_vpc_cidr, 2, 2),
+    cidrsubnet(var.aap_vpc_cidr, 2, 3)
+  ]
 }
 
 resource "aws_vpc" "aap_vpc" {
@@ -23,13 +30,13 @@ resource "aws_internet_gateway" "aap_gateway" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "bastion" {
   vpc_id                  = aws_vpc.aap_vpc.id
-  cidr_block              = local.aap_public_subnet_cidr
+  cidr_block              = local.bastion_subnet_cidr
   map_public_ip_on_launch = true
 
   tags = {
-    Name         = "AAP public subnet"
+    Name         = "AAP bastion subnet"
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }
@@ -48,25 +55,34 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+resource "aws_route_table_association" "bastion" {
+  subnet_id      = aws_subnet.bastion.id
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_subnet" "private" {
-  count = var.disconnected ? 1 : 0
+resource "aws_subnet" "controller" {
+  count = var.controller_count
 
   vpc_id                  = aws_vpc.aap_vpc.id
-  cidr_block              = local.aap_private_subnet_cidr
-  map_public_ip_on_launch = false
+  cidr_block              = local.controller_subnet_cidrs[count.index]
+  availability_zone       = data.aws_availability_zones.this.names[count.index]
+  map_public_ip_on_launch = var.disconnected ? false : true
 
   tags = {
-    Name         = "AAP private subnet"
+    Name         = "AAP controller subnet ${count.index}"
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
-resource "aws_route_table" "private" {
+resource "aws_route_table_association" "controller" {
+  count = var.controller_count
+
+  subnet_id      = aws_subnet.controller[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
+########
+resource "aws_route_table" "disconnected" {
   count = var.disconnected ? 1 : 0
 
   vpc_id = aws_vpc.aap_vpc.id
@@ -77,16 +93,16 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name         = "AAP private route table"
+    Name         = "AAP disconnected route table"
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }
 
-resource "aws_route_table_association" "private" {
-  count = var.disconnected ? 1 : 0
+resource "aws_route_table_association" "private_controller" {
+  count = var.disconnected ? var.controller_count : 0
 
-  subnet_id      = aws_subnet.private[0].id
-  route_table_id = aws_route_table.private[0].id
+  subnet_id      = aws_subnet.controller[count.index].id
+  route_table_id = aws_route_table.disconnected[0].id
 }
 
 resource "aws_eip" "nat" {
@@ -105,10 +121,10 @@ resource "aws_nat_gateway" "nat" {
   count = var.disconnected ? 1 : 0
 
   allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.bastion.id
 
   tags = {
-    Name         = "AAP private subnet NAT gateway"
+    Name         = "AAP disconnected subnet ${count.index} NAT gateway"
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }

@@ -65,6 +65,10 @@ variable "controller_instance_type" {
 variable "controller_count" {
   type    = number
   default = "1"
+  validation {
+    condition     = contains([1,2,3], var.controller_count)
+    error_message = "Controller count must be between 1 and 3"
+  }
 }
 variable "controller_image_id" {
   type    = string
@@ -86,6 +90,10 @@ variable "hub_instance_name" {
 variable "hub_count" {
   type    = number
   default = "1"
+  validation {
+    condition     = contains([1,2,3], var.hub_count)
+    error_message = "Hub count must be between 1 and 3"
+  }
 }
 variable "hub_instance_type" {
   type    = string
@@ -115,6 +123,10 @@ variable "database_instance_type" {
 variable "database_count" {
   type    = number
   default = "0"
+  validation {
+    condition     = contains([0,1], var.database_count)
+    error_message = "Database count must be 0 or 1"
+  }
 }
 variable "database_image_id" {
   type    = string
@@ -165,6 +177,10 @@ variable "edacontroller_instance_type" {
 variable "edacontroller_count" {
   type    = number
   default = "0"
+  validation {
+    condition     = contains([0,1], var.edacontroller_count)
+    error_message = "EDA controller count must be 0 or 1"
+  }
 }
 variable "edacontroller_image_id" {
   type    = string

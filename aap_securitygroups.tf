@@ -32,16 +32,13 @@ resource "aws_security_group" "controller" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  ingress {
-    description = "SSH from bastion"
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = [
-      "${aws_instance.bastion.private_ip}/32",
-      "${aws_instance.bastion.public_ip}/32",
-    ]
-  }
+ ingress {
+   description = "SSH from bastion"
+   from_port   = "22"
+   to_port     = "22"
+   protocol    = "tcp"
+   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+ }
   egress {
     from_port   = "0"
     to_port     = "0"
@@ -65,80 +62,18 @@ resource "aws_security_group" "hub" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  ingress {
-    description = "SSH from bastion"
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = [
-      "${aws_instance.bastion.private_ip}/32",
-      "${aws_instance.bastion.public_ip}/32",
-    ]
-  }
+ ingress {
+   description = "SSH from bastion"
+   from_port   = "22"
+   to_port     = "22"
+   protocol    = "tcp"
+   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+ }
   egress {
     from_port   = "0"
     to_port     = "0"
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    aap_build_id = "${random_id.aap_id.hex}"
-  }
-}
-
-resource "aws_security_group" "public_subnet" {
-  name        = "aap-public-subnet-${random_id.aap_id.hex}"
-  description = "Rules for all instances on the AAP public subnet"
-  vpc_id      = aws_vpc.aap_vpc.id
-  ingress {
-    from_port = "0"
-    to_port   = "0"
-    protocol  = "-1"
-    cidr_blocks = flatten([
-      local.aap_public_subnet_cidr,
-      var.disconnected ? [local.aap_private_subnet_cidr] : []
-    ])
-  }
-  egress {
-    from_port = "0"
-    to_port   = "0"
-    protocol  = "-1"
-    cidr_blocks = flatten([
-      local.aap_public_subnet_cidr,
-      var.disconnected ? [local.aap_private_subnet_cidr] : []
-    ])
-  }
-
-  tags = {
-    aap_build_id = "${random_id.aap_id.hex}"
-  }
-}
-
-resource "aws_security_group" "private_subnet" {
-  count = var.disconnected ? 1 : 0
-
-  name        = "aap-private-subnet-${random_id.aap_id.hex}"
-  description = "Rules for all instances on the AAP private subnet"
-  vpc_id      = aws_vpc.aap_vpc.id
-  ingress {
-    from_port = "0"
-    to_port   = "0"
-    protocol  = "-1"
-    cidr_blocks = [
-      local.aap_public_subnet_cidr,
-      local.aap_private_subnet_cidr,
-    ]
-  }
-  egress {
-    from_port = "0"
-    to_port   = "0"
-    protocol  = "-1"
-    cidr_blocks = [
-      local.aap_public_subnet_cidr,
-      local.aap_private_subnet_cidr,
-      local.rhui_cidr[var.aap_aws_region]
-    ]
   }
 
   tags = {
@@ -169,10 +104,7 @@ resource "aws_security_group" "edacontroller" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-    cidr_blocks = [
-      "${aws_instance.bastion.private_ip}/32",
-      "${aws_instance.bastion.public_ip}/32",
-    ]
+   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
   }
   egress {
     from_port   = "0"
@@ -181,3 +113,62 @@ resource "aws_security_group" "edacontroller" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "aap_subnets" {
+  name        = "aap-subnets-${random_id.aap_id.hex}"
+  description = "Rules for intra-VPC connections between subnets"
+  vpc_id      = aws_vpc.aap_vpc.id
+  ingress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = flatten([
+      local.bastion_subnet_cidr,
+      local.controller_subnet_cidrs
+    ])
+  }
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = flatten([
+      local.bastion_subnet_cidr,
+      local.controller_subnet_cidrs
+    ])
+  }
+
+  tags = {
+    aap_build_id = "${random_id.aap_id.hex}"
+  }
+}
+
+# resource "aws_security_group" "private_subnet" {
+#   count = var.disconnected ? 1 : 0
+# 
+#   name        = "aap-private-subnet-${random_id.aap_id.hex}"
+#   description = "Rules for all instances on the AAP private subnet"
+#   vpc_id      = aws_vpc.aap_vpc.id
+#   ingress {
+#     from_port = "0"
+#     to_port   = "0"
+#     protocol  = "-1"
+#     cidr_blocks = [
+#       local.aap_public_subnet_cidr,
+#       local.aap_private_subnet_cidr,
+#     ]
+#   }
+#   egress {
+#     from_port = "0"
+#     to_port   = "0"
+#     protocol  = "-1"
+#     cidr_blocks = [
+#       local.aap_public_subnet_cidr,
+#       local.aap_private_subnet_cidr,
+#       local.rhui_cidr[var.aap_aws_region]
+#     ]
+#   }
+# 
+#   tags = {
+#     aap_build_id = "${random_id.aap_id.hex}"
+#   }
+# }

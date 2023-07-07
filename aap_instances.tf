@@ -6,7 +6,7 @@ resource "aws_instance" "bastion" {
   instance_type               = var.bastion_instance_type
   ami                         = var.bastion_image_id != "" ? var.bastion_image_id : local.rhel_ami.id
   key_name                    = var.bastion_key_name
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = aws_subnet.bastion.id
   vpc_security_group_ids      = [aws_security_group.bastion.id]
   associate_public_ip_address = true
 
@@ -31,12 +31,11 @@ resource "aws_instance" "controller" {
   instance_type               = var.controller_instance_type
   ami                         = var.controller_image_id != "" ? var.controller_image_id : local.rhel_ami.id
   key_name                    = var.controller_key_name != "" ? var.controller_key_name : var.bastion_key_name
-  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = var.disconnected ? false : true
   vpc_security_group_ids = flatten([
     aws_security_group.controller.id,
-    aws_security_group.public_subnet.id,
-    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
+    aws_security_group.aap_subnets.id
   ])
   root_block_device {
     volume_size = var.controller_disk_size
@@ -73,12 +72,11 @@ resource "aws_instance" "hub" {
   instance_type               = var.hub_instance_type
   ami                         = var.hub_image_id != "" ? var.hub_image_id : local.rhel_ami.id
   key_name                    = var.hub_key_name != "" ? var.hub_key_name : var.bastion_key_name
-  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = var.disconnected ? false : true
   vpc_security_group_ids = flatten([
     aws_security_group.hub.id,
-    aws_security_group.public_subnet.id,
-    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
+    aws_security_group.aap_subnets.id
   ])
   root_block_device {
     volume_size = var.hub_disk_size
@@ -115,12 +113,9 @@ resource "aws_instance" "database" {
   instance_type               = var.database_instance_type
   ami                         = var.database_image_id != "" ? var.database_image_id : local.rhel_ami.id
   key_name                    = var.database_key_name != "" ? var.database_key_name : var.bastion_key_name
-  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = false
-  vpc_security_group_ids = flatten([
-    aws_security_group.public_subnet.id,
-    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
-  ])
+  vpc_security_group_ids      = [aws_security_group.aap_subnets.id]
   root_block_device {
     volume_size = var.database_disk_size
   }
@@ -148,12 +143,9 @@ resource "aws_instance" "execution" {
   instance_type               = var.execution_instance_type
   ami                         = var.execution_image_id != "" ? var.execution_image_id : local.rhel_ami.id
   key_name                    = var.execution_key_name != "" ? var.execution_key_name : var.bastion_key_name
-  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = false
-  vpc_security_group_ids = flatten([
-    aws_security_group.public_subnet.id,
-    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
-  ])
+  vpc_security_group_ids      = [aws_security_group.aap_subnets.id]
   root_block_device {
     volume_size = var.execution_disk_size
   }
@@ -181,12 +173,11 @@ resource "aws_instance" "edacontroller" {
   instance_type               = var.edacontroller_instance_type
   ami                         = var.edacontroller_image_id != "" ? var.edacontroller_image_id : local.rhel_ami.id
   key_name                    = var.edacontroller_key_name != "" ? var.edacontroller_key_name : var.bastion_key_name
-  subnet_id                   = var.disconnected ? aws_subnet.private[0].id : aws_subnet.public.id
+  subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = var.disconnected ? false : true
   vpc_security_group_ids = flatten([
     aws_security_group.edacontroller.id,
-    aws_security_group.public_subnet.id,
-    var.disconnected ? [aws_security_group.private_subnet[0].id] : []
+    aws_security_group.aap_subnets.id
   ])
   root_block_device {
     volume_size = var.edacontroller_disk_size
