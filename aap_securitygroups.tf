@@ -32,13 +32,13 @@ resource "aws_security_group" "controller" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
- ingress {
-   description = "SSH from bastion"
-   from_port   = "22"
-   to_port     = "22"
-   protocol    = "tcp"
-   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
- }
+  ingress {
+    description = "SSH from bastion"
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+  }
   egress {
     from_port   = "0"
     to_port     = "0"
@@ -62,13 +62,13 @@ resource "aws_security_group" "hub" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
- ingress {
-   description = "SSH from bastion"
-   from_port   = "22"
-   to_port     = "22"
-   protocol    = "tcp"
-   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
- }
+  ingress {
+    description = "SSH from bastion"
+    from_port   = "22"
+    to_port     = "22"
+    protocol    = "tcp"
+    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+  }
   egress {
     from_port   = "0"
     to_port     = "0"
@@ -104,7 +104,7 @@ resource "aws_security_group" "edacontroller" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-   cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
   }
   egress {
     from_port   = "0"
@@ -141,34 +141,3 @@ resource "aws_security_group" "aap_subnets" {
     aap_build_id = "${random_id.aap_id.hex}"
   }
 }
-
-# resource "aws_security_group" "private_subnet" {
-#   count = var.disconnected ? 1 : 0
-# 
-#   name        = "aap-private-subnet-${random_id.aap_id.hex}"
-#   description = "Rules for all instances on the AAP private subnet"
-#   vpc_id      = aws_vpc.aap_vpc.id
-#   ingress {
-#     from_port = "0"
-#     to_port   = "0"
-#     protocol  = "-1"
-#     cidr_blocks = [
-#       local.aap_public_subnet_cidr,
-#       local.aap_private_subnet_cidr,
-#     ]
-#   }
-#   egress {
-#     from_port = "0"
-#     to_port   = "0"
-#     protocol  = "-1"
-#     cidr_blocks = [
-#       local.aap_public_subnet_cidr,
-#       local.aap_private_subnet_cidr,
-#       local.rhui_cidr[var.aap_aws_region]
-#     ]
-#   }
-# 
-#   tags = {
-#     aap_build_id = "${random_id.aap_id.hex}"
-#   }
-# }
