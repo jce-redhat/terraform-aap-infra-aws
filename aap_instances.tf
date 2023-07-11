@@ -17,8 +17,13 @@ resource "aws_instance" "bastion" {
   }
 }
 
+resource "aws_eip" "bastion" {
+  instance = aws_instance.bastion.id
+  domain   = "vpc"
+}
+
 resource "ansible_host" "bastion" {
-  name   = aws_instance.bastion.public_dns
+  name   = aws_route53_record.bastion.name
   groups = ["bastion"]
   variables = {
     ansible_user = "ec2-user"
