@@ -37,7 +37,7 @@ resource "aws_security_group" "controller" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${aws_eip.bastion.public_ip}/32"]
   }
   egress {
     from_port   = "0"
@@ -67,7 +67,7 @@ resource "aws_security_group" "hub" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${aws_eip.bastion.public_ip}/32"]
   }
   egress {
     from_port   = "0"
@@ -104,7 +104,7 @@ resource "aws_security_group" "edacontroller" {
     from_port   = "22"
     to_port     = "22"
     protocol    = "tcp"
-    cidr_blocks = ["${aws_instance.bastion.public_ip}/32"]
+    cidr_blocks = ["${aws_eip.bastion.public_ip}/32"]
   }
   egress {
     from_port   = "0"

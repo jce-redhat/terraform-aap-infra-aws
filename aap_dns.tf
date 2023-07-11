@@ -2,6 +2,14 @@ data "aws_route53_zone" "sandbox" {
   name = var.aap_dns_zone
 }
 
+resource "aws_route53_record" "bastion" {
+  zone_id = data.aws_route53_zone.sandbox.zone_id
+  name    = "bastion.${var.aap_dns_zone}"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_eip.bastion.public_ip]
+}
+
 resource "aws_route53_record" "controller" {
   count = var.controller_count
 

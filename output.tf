@@ -4,7 +4,7 @@ output "aap_build_id" {
 
 output "bastion_public_fqdn" {
   description = "Public FQDN of the AAP bastion"
-  value       = aws_instance.bastion.public_dns
+  value       = aws_route53_record.bastion.name
 }
 
 output "controller_public_fqdns" {
