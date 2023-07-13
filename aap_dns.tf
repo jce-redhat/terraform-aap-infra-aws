@@ -32,8 +32,8 @@ resource "aws_route53_record" "controller_lb" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.aap_frontend.dns_name
-    zone_id                = aws_lb.aap_frontend.zone_id
+    name                   = aws_lb.controllers[0].dns_name
+    zone_id                = aws_lb.controllers[0].zone_id
     evaluate_target_health = true
   }
 }

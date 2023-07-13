@@ -43,8 +43,3 @@ output "edacontroller_private_fqdns" {
   description = "Private FQDN of the AAP EDA controllers"
   value       = aws_instance.edacontroller.*.private_dns
 }
-
-output "load_balancer_dns_name" {
-  description = "DNS name of the front-end load balancer"
-  value       = aws_lb.aap_frontend.dns_name
-}
