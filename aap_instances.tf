@@ -3,11 +3,13 @@ locals {
 }
 
 resource "aws_instance" "bastion" {
-  instance_type               = var.bastion_instance_type
-  ami                         = var.bastion_image_id != "" ? var.bastion_image_id : local.rhel_ami.id
-  key_name                    = var.bastion_key_name
-  subnet_id                   = aws_subnet.bastion.id
-  vpc_security_group_ids      = [aws_security_group.bastion.id]
+  instance_type = var.bastion_instance_type
+  ami           = var.bastion_image_id != "" ? var.bastion_image_id : local.rhel_ami.id
+  key_name      = var.bastion_key_name
+  subnet_id     = aws_subnet.bastion.id
+  vpc_security_group_ids = [
+    aws_security_group.bastion.id
+  ]
   associate_public_ip_address = true
 
   tags = {
@@ -23,8 +25,10 @@ resource "aws_eip" "bastion" {
 }
 
 resource "ansible_host" "bastion" {
-  name   = aws_route53_record.bastion.name
-  groups = ["bastion"]
+  name = aws_route53_record.bastion.name
+  groups = [
+    "bastion"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }
@@ -63,8 +67,10 @@ resource "aws_eip" "controller" {
 resource "ansible_host" "controller" {
   count = var.controller_count
 
-  name   = aws_instance.controller[count.index].private_dns
-  groups = ["controller"]
+  name = aws_instance.controller[count.index].private_dns
+  groups = [
+    "controller"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }
@@ -103,8 +109,10 @@ resource "aws_eip" "hub" {
 resource "ansible_host" "hub" {
   count = var.hub_count
 
-  name   = aws_instance.hub[count.index].private_dns
-  groups = ["hub"]
+  name = aws_instance.hub[count.index].private_dns
+  groups = [
+    "hub"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }
@@ -118,7 +126,9 @@ resource "aws_instance" "database" {
   key_name                    = var.database_key_name != "" ? var.database_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = false
-  vpc_security_group_ids      = [aws_security_group.aap_subnets.id]
+  vpc_security_group_ids = [
+    aws_security_group.aap_subnets.id
+  ]
   root_block_device {
     volume_size = var.database_disk_size
   }
@@ -133,8 +143,10 @@ resource "aws_instance" "database" {
 resource "ansible_host" "database" {
   count = var.database_count
 
-  name   = aws_instance.database[count.index].private_dns
-  groups = ["database"]
+  name = aws_instance.database[count.index].private_dns
+  groups = [
+    "database"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }
@@ -148,7 +160,9 @@ resource "aws_instance" "execution" {
   key_name                    = var.execution_key_name != "" ? var.execution_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = false
-  vpc_security_group_ids      = [aws_security_group.aap_subnets.id]
+  vpc_security_group_ids = [
+    aws_security_group.aap_subnets.id
+  ]
   root_block_device {
     volume_size = var.execution_disk_size
   }
@@ -163,8 +177,10 @@ resource "aws_instance" "execution" {
 resource "ansible_host" "execution" {
   count = var.execution_count
 
-  name   = aws_instance.execution[count.index].private_dns
-  groups = ["execution"]
+  name = aws_instance.execution[count.index].private_dns
+  groups = [
+    "execution"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }
@@ -203,8 +219,10 @@ resource "aws_eip" "edacontroller" {
 resource "ansible_host" "edacontroller" {
   count = var.edacontroller_count
 
-  name   = aws_instance.edacontroller[count.index].private_dns
-  groups = ["edacontroller"]
+  name = aws_instance.edacontroller[count.index].private_dns
+  groups = [
+    "edacontroller"
+  ]
   variables = {
     ansible_user = "ec2-user"
   }

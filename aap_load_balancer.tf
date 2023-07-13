@@ -15,7 +15,9 @@ resource "aws_lb_target_group" "controllers" {
   protocol    = "TCP"
   target_type = "instance"
   vpc_id      = aws_vpc.aap_vpc.id
-  depends_on  = [aws_lb.controllers]
+  depends_on = [
+    aws_lb.controllers
+  ]
 
   lifecycle {
     create_before_destroy = true

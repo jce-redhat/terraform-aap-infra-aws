@@ -7,7 +7,9 @@ resource "aws_route53_record" "bastion" {
   name    = "bastion.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_eip.bastion.public_ip]
+  records = [
+    aws_eip.bastion.public_ip
+  ]
 }
 
 # for each public node type (controller, hub, edacontroller), if there is
@@ -21,7 +23,9 @@ resource "aws_route53_record" "controller" {
   name    = "controller.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_eip.controller[count.index].public_ip]
+  records = [
+    aws_eip.controller[count.index].public_ip
+  ]
 }
 
 resource "aws_route53_record" "controller_lb" {
@@ -45,7 +49,9 @@ resource "aws_route53_record" "hub" {
   name    = "hub.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_eip.hub[count.index].public_ip]
+  records = [
+    aws_eip.hub[count.index].public_ip
+  ]
 }
 
 resource "aws_route53_record" "edacontroller" {
@@ -55,5 +61,7 @@ resource "aws_route53_record" "edacontroller" {
   name    = "edacontroller.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
-  records = [aws_eip.edacontroller[count.index].public_ip]
+  records = [
+    aws_eip.edacontroller[count.index].public_ip
+  ]
 }

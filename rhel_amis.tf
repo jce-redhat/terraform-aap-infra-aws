@@ -5,12 +5,16 @@ data "aws_ami" "rhel8" {
     "self"
   ]
   filter {
-    name   = "name"
-    values = [var.rhel8_ami_name]
+    name = "name"
+    values = [
+      var.rhel8_ami_name
+    ]
   }
   filter {
-    name   = "architecture"
-    values = [var.rhel_arch]
+    name = "architecture"
+    values = [
+      var.rhel_arch
+    ]
   }
 }
 
@@ -21,11 +25,15 @@ data "aws_ami" "rhel9" {
     "self"
   ]
   filter {
-    name   = "name"
-    values = [var.rhel9_ami_name]
+    name = "name"
+    values = [
+      var.rhel9_ami_name
+    ]
   }
   filter {
-    name   = "architecture"
-    values = [var.rhel_arch]
+    name = "architecture"
+    values = [
+      var.rhel_arch
+    ]
   }
 }

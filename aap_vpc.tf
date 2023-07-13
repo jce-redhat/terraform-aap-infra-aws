@@ -76,8 +76,10 @@ resource "aws_subnet" "controller" {
 }
 
 resource "aws_eip" "nat" {
-  domain     = "vpc"
-  depends_on = [aws_internet_gateway.aap_gateway]
+  domain = "vpc"
+  depends_on = [
+    aws_internet_gateway.aap_gateway
+  ]
 
   tags = {
     Name         = "AAP Elastic IP for NAT"
