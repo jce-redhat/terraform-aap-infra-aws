@@ -7,37 +7,21 @@ output "bastion_public_fqdn" {
   value       = aws_route53_record.bastion.name
 }
 
-output "controller_public_fqdns" {
-  description = "Public FQDN of the AAP controllers"
-  value       = aws_route53_record.controller.*.name
-}
 output "controller_private_fqdns" {
   description = "Private FQDN of the AAP controllers"
   value       = aws_instance.controller.*.private_dns
-}
-
-output "hub_public_fqdns" {
-  description = "Public FQDN of the AAP hubs"
-  value       = aws_route53_record.hub.*.name
 }
 output "hub_private_fqdns" {
   description = "Private FQDN of the AAP hubs"
   value       = aws_instance.hub.*.private_dns
 }
-
 output "database_private_fqdns" {
   description = "Private FQDN of the AAP databases"
   value       = aws_instance.database.*.private_dns
 }
-
 output "execution_public_fqdns" {
   description = "Public FQDN of the AAP execution nodes"
   value       = aws_instance.execution.*.public_dns
-}
-
-output "edacontroller_public_fqdns" {
-  description = "Public FQDN of the AAP EDA controllers"
-  value       = aws_route53_record.edacontroller.*.name
 }
 output "edacontroller_private_fqdns" {
   description = "Private FQDN of the AAP EDA controllers"
