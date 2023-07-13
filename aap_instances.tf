@@ -37,7 +37,7 @@ resource "aws_instance" "controller" {
   ami                         = var.controller_image_id != "" ? var.controller_image_id : local.rhel_ami.id
   key_name                    = var.controller_key_name != "" ? var.controller_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.disconnected ? false : true
+  associate_public_ip_address = var.controller_count == 1 ? true : false
   vpc_security_group_ids = flatten([
     aws_security_group.controller.id,
     aws_security_group.aap_subnets.id
@@ -54,7 +54,7 @@ resource "aws_instance" "controller" {
 }
 
 resource "aws_eip" "controller" {
-  count = var.controller_count
+  count = var.controller_count == 1 ? 1 : 0
 
   instance = aws_instance.controller[count.index].id
   domain   = "vpc"
@@ -67,7 +67,6 @@ resource "ansible_host" "controller" {
   groups = ["controller"]
   variables = {
     ansible_user = "ec2-user"
-    aws_eip_fqdn = aws_route53_record.controller[count.index].name
   }
 }
 
@@ -78,7 +77,7 @@ resource "aws_instance" "hub" {
   ami                         = var.hub_image_id != "" ? var.hub_image_id : local.rhel_ami.id
   key_name                    = var.hub_key_name != "" ? var.hub_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.disconnected ? false : true
+  associate_public_ip_address = var.hub_count == 1 ? true : false
   vpc_security_group_ids = flatten([
     aws_security_group.hub.id,
     aws_security_group.aap_subnets.id
@@ -95,7 +94,7 @@ resource "aws_instance" "hub" {
 }
 
 resource "aws_eip" "hub" {
-  count = var.hub_count
+  count = var.hub_count == 1 ? 1 : 0
 
   instance = aws_instance.hub[count.index].id
   domain   = "vpc"
@@ -108,7 +107,6 @@ resource "ansible_host" "hub" {
   groups = ["hub"]
   variables = {
     ansible_user = "ec2-user"
-    aws_eip_fqdn = aws_route53_record.hub[count.index].name
   }
 }
 
@@ -179,7 +177,7 @@ resource "aws_instance" "edacontroller" {
   ami                         = var.edacontroller_image_id != "" ? var.edacontroller_image_id : local.rhel_ami.id
   key_name                    = var.edacontroller_key_name != "" ? var.edacontroller_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.disconnected ? false : true
+  associate_public_ip_address = var.edacontroller_count == 1 ? true : false
   vpc_security_group_ids = flatten([
     aws_security_group.edacontroller.id,
     aws_security_group.aap_subnets.id
@@ -196,7 +194,7 @@ resource "aws_instance" "edacontroller" {
 }
 
 resource "aws_eip" "edacontroller" {
-  count = var.edacontroller_count
+  count = var.edacontroller_count == 1 ? 1 : 0
 
   instance = aws_instance.edacontroller[count.index].id
   domain   = "vpc"
@@ -209,6 +207,5 @@ resource "ansible_host" "edacontroller" {
   groups = ["edacontroller"]
   variables = {
     ansible_user = "ec2-user"
-    aws_eip_fqdn = aws_route53_record.edacontroller[count.index].name
   }
 }

@@ -46,5 +46,5 @@ output "edacontroller_private_fqdns" {
 
 output "load_balancer_dns_name" {
   description = "DNS name of the front-end load balancer"
-  value       = aws_lb.aap_frontend.*.dns_name
+  value       = aws_lb.aap_frontend.dns_name
 }

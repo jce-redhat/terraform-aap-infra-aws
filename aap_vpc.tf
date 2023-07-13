@@ -66,7 +66,7 @@ resource "aws_subnet" "controller" {
   vpc_id                  = aws_vpc.aap_vpc.id
   cidr_block              = local.controller_subnet_cidrs[count.index]
   availability_zone       = data.aws_availability_zones.this.names[count.index]
-  map_public_ip_on_launch = var.disconnected ? false : true
+  map_public_ip_on_launch = false
 
   tags = {
     Name         = "AAP controller subnet ${count.index}"
@@ -74,40 +74,7 @@ resource "aws_subnet" "controller" {
   }
 }
 
-resource "aws_route_table_association" "controller" {
-  count = var.controller_count
-
-  subnet_id      = aws_subnet.controller[count.index].id
-  route_table_id = aws_route_table.public.id
-}
-
-########
-resource "aws_route_table" "disconnected" {
-  count = var.disconnected ? 1 : 0
-
-  vpc_id = aws_vpc.aap_vpc.id
-
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat[0].id
-  }
-
-  tags = {
-    Name         = "AAP disconnected route table"
-    aap_build_id = "${random_id.aap_id.hex}"
-  }
-}
-
-resource "aws_route_table_association" "private_controller" {
-  count = var.disconnected ? var.controller_count : 0
-
-  subnet_id      = aws_subnet.controller[count.index].id
-  route_table_id = aws_route_table.disconnected[0].id
-}
-
 resource "aws_eip" "nat" {
-  count = var.disconnected ? 1 : 0
-
   domain     = "vpc"
   depends_on = [aws_internet_gateway.aap_gateway]
 
@@ -118,13 +85,32 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  count = var.disconnected ? 1 : 0
-
-  allocation_id = aws_eip.nat[0].id
+  allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.bastion.id
 
   tags = {
-    Name         = "AAP disconnected subnet ${count.index} NAT gateway"
+    Name         = "AAP controller subnet NAT gateway"
     aap_build_id = "${random_id.aap_id.hex}"
   }
+}
+
+resource "aws_route_table" "nat" {
+  vpc_id = aws_vpc.aap_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id
+  }
+
+  tags = {
+    Name         = "AAP NAT route table"
+    aap_build_id = "${random_id.aap_id.hex}"
+  }
+}
+
+resource "aws_route_table_association" "controller_nat" {
+  count = var.controller_count
+
+  subnet_id      = aws_subnet.controller[count.index].id
+  route_table_id = aws_route_table.nat.id
 }
