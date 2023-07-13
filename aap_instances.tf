@@ -73,6 +73,7 @@ resource "ansible_host" "controller" {
   ]
   variables = {
     ansible_user = "ec2-user"
+    hosts_file_hostname = "controller${count.index}"
   }
 }
 
@@ -115,6 +116,7 @@ resource "ansible_host" "hub" {
   ]
   variables = {
     ansible_user = "ec2-user"
+    hosts_file_hostname = "hub${count.index}"
   }
 }
 
@@ -149,6 +151,7 @@ resource "ansible_host" "database" {
   ]
   variables = {
     ansible_user = "ec2-user"
+    hosts_file_hostname = "database${count.index}"
   }
 }
 
@@ -183,6 +186,7 @@ resource "ansible_host" "execution" {
   ]
   variables = {
     ansible_user = "ec2-user"
+    hosts_file_hostname = "execution${count.index}"
   }
 }
 
@@ -225,5 +229,6 @@ resource "ansible_host" "edacontroller" {
   ]
   variables = {
     ansible_user = "ec2-user"
+    hosts_file_hostname = "edacontroller${count.index}"
   }
 }
