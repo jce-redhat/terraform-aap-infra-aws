@@ -1,4 +1,5 @@
-data "aws_availability_zones" "this" {
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
 locals {
@@ -65,7 +66,7 @@ resource "aws_subnet" "controller" {
 
   vpc_id                  = aws_vpc.aap_vpc.id
   cidr_block              = local.controller_subnet_cidrs[count.index]
-  availability_zone       = data.aws_availability_zones.this.names[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false
 
   tags = {
