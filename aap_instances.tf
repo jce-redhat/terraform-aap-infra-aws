@@ -128,9 +128,10 @@ resource "aws_instance" "database" {
   key_name                    = var.database_key_name != "" ? var.database_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = false
-  vpc_security_group_ids = [
+  vpc_security_group_ids = flatten([
+    aws_security_group.database.id,
     aws_security_group.aap_subnets.id
-  ]
+  ])
   root_block_device {
     volume_size = var.database_disk_size
   }

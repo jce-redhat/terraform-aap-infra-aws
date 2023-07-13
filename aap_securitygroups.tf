@@ -138,6 +138,20 @@ resource "aws_security_group" "edacontroller" {
   }
 }
 
+resource "aws_security_group" "database" {
+  name        = "aap-database-${random_id.aap_id.hex}"
+  description = "AAP database ingress rules"
+  vpc_id      = aws_vpc.aap_vpc.id
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+}
+
 resource "aws_security_group" "aap_subnets" {
   name        = "aap-subnets-${random_id.aap_id.hex}"
   description = "Rules for intra-VPC connections between subnets"
