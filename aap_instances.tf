@@ -10,6 +10,9 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids = [
     aws_security_group.bastion.id
   ]
+  root_block_device {
+    volume_size = var.bastion_disk_size
+  }
   associate_public_ip_address = true
 
   tags = {
@@ -72,7 +75,7 @@ resource "ansible_host" "controller" {
     "controller"
   ]
   variables = {
-    ansible_user = "ec2-user"
+    ansible_user        = "ec2-user"
     hosts_file_hostname = "controller${count.index}"
   }
 }
@@ -115,7 +118,7 @@ resource "ansible_host" "hub" {
     "hub"
   ]
   variables = {
-    ansible_user = "ec2-user"
+    ansible_user        = "ec2-user"
     hosts_file_hostname = "hub${count.index}"
   }
 }
@@ -151,7 +154,7 @@ resource "ansible_host" "database" {
     "database"
   ]
   variables = {
-    ansible_user = "ec2-user"
+    ansible_user        = "ec2-user"
     hosts_file_hostname = "database${count.index}"
   }
 }
@@ -186,7 +189,7 @@ resource "ansible_host" "execution" {
     "execution"
   ]
   variables = {
-    ansible_user = "ec2-user"
+    ansible_user        = "ec2-user"
     hosts_file_hostname = "execution${count.index}"
   }
 }
@@ -229,7 +232,7 @@ resource "ansible_host" "edacontroller" {
     "edacontroller"
   ]
   variables = {
-    ansible_user = "ec2-user"
+    ansible_user        = "ec2-user"
     hosts_file_hostname = "edacontroller${count.index}"
   }
 }

@@ -43,7 +43,7 @@ variable "bastion_instance_name" {
 }
 variable "bastion_instance_type" {
   type    = string
-  default = "t3a.micro"
+  default = "t3a.small"
 }
 variable "bastion_image_id" {
   type    = string
@@ -52,6 +52,10 @@ variable "bastion_image_id" {
 variable "bastion_key_name" {
   type    = string
   default = ""
+}
+variable "bastion_disk_size" {
+  type    = number
+  default = 40
 }
 
 variable "controller_instance_name" {
