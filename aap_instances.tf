@@ -44,7 +44,7 @@ resource "aws_instance" "controller" {
   ami                         = var.controller_image_id != "" ? var.controller_image_id : local.rhel_ami.id
   key_name                    = var.controller_key_name != "" ? var.controller_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.controller_count == 1 ? true : false
+  associate_public_ip_address = true
   vpc_security_group_ids = flatten([
     aws_security_group.controller.id,
     aws_security_group.aap_subnets.id
@@ -87,7 +87,7 @@ resource "aws_instance" "hub" {
   ami                         = var.hub_image_id != "" ? var.hub_image_id : local.rhel_ami.id
   key_name                    = var.hub_key_name != "" ? var.hub_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.hub_count == 1 ? true : false
+  associate_public_ip_address = true
   vpc_security_group_ids = flatten([
     aws_security_group.hub.id,
     aws_security_group.aap_subnets.id
@@ -130,7 +130,7 @@ resource "aws_instance" "database" {
   ami                         = var.database_image_id != "" ? var.database_image_id : local.rhel_ami.id
   key_name                    = var.database_key_name != "" ? var.database_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   vpc_security_group_ids = flatten([
     aws_security_group.database.id,
     aws_security_group.aap_subnets.id
@@ -166,7 +166,7 @@ resource "aws_instance" "execution" {
   ami                         = var.execution_image_id != "" ? var.execution_image_id : local.rhel_ami.id
   key_name                    = var.execution_key_name != "" ? var.execution_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   vpc_security_group_ids = [
     aws_security_group.aap_subnets.id
   ]
@@ -201,7 +201,7 @@ resource "aws_instance" "edacontroller" {
   ami                         = var.edacontroller_image_id != "" ? var.edacontroller_image_id : local.rhel_ami.id
   key_name                    = var.edacontroller_key_name != "" ? var.edacontroller_key_name : var.bastion_key_name
   subnet_id                   = aws_subnet.controller[count.index].id
-  associate_public_ip_address = var.edacontroller_count == 1 ? true : false
+  associate_public_ip_address = true
   vpc_security_group_ids = flatten([
     aws_security_group.edacontroller.id,
     aws_security_group.aap_subnets.id
