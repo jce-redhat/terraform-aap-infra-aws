@@ -94,8 +94,8 @@ resource "aws_security_group" "edacontroller" {
   }
   ingress {
     description = "Webhook ports"
-    from_port   = "5001"
-    to_port     = "5004"
+    from_port   = "5000"
+    to_port     = "5010"
     protocol    = "tcp"
     cidr_blocks = [
       "0.0.0.0/0"
