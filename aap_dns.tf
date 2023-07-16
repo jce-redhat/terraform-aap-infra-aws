@@ -58,7 +58,7 @@ resource "aws_route53_record" "edacontroller" {
   count = var.edacontroller_count == 1 ? 1 : 0
 
   zone_id = data.aws_route53_zone.sandbox.zone_id
-  name    = "edacontroller.${var.aap_dns_zone}"
+  name    = "eda.${var.aap_dns_zone}"
   type    = "A"
   ttl     = "300"
   records = [
