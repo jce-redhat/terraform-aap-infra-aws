@@ -38,6 +38,15 @@ resource "aws_security_group" "controller" {
       "0.0.0.0/0"
     ]
   }
+  ingress {
+    description = "Automation Mesh"
+    from_port   = "21799"
+    to_port     = "21799"
+    protocol    = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
   egress {
     from_port = "0"
     to_port   = "0"
@@ -115,6 +124,29 @@ resource "aws_security_group" "database" {
   name        = "aap-database-${random_id.aap_id.hex}"
   description = "AAP database ingress rules"
   vpc_id      = aws_vpc.aap_vpc.id
+  egress {
+    from_port = "0"
+    to_port   = "0"
+    protocol  = "-1"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
+}
+
+resource "aws_security_group" "execution" {
+  name        = "aap-execution-${random_id.aap_id.hex}"
+  description = "AAP execution node ingress rules"
+  vpc_id      = aws_vpc.aap_vpc.id
+  ingress {
+    description = "Automation Mesh"
+    from_port   = "27199"
+    to_port     = "27199"
+    protocol    = "tcp"
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+  }
   egress {
     from_port = "0"
     to_port   = "0"

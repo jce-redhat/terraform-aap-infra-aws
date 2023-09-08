@@ -168,6 +168,7 @@ resource "aws_instance" "execution" {
   subnet_id                   = aws_subnet.controller[count.index].id
   associate_public_ip_address = true
   vpc_security_group_ids = [
+    aws_security_group.execution.id,
     aws_security_group.aap_subnets.id
   ]
   root_block_device {
