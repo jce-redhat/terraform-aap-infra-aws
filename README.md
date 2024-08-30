@@ -1,3 +1,7 @@
+# ARCHIVED
+
+This repository has been archived in favor of the [terraform-aap-sandbox](https://github.com/jce-redhat/terraform-aap-sandbox) repo.
+
 # terraform-aap-infra-aws - Build AAP infrastructure nodes on AWS with Terraform
 
 Terraform configuration for building Ansible Automation Platform (AAP) infrastructure
